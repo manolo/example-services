@@ -1,0 +1,22 @@
+name: selenium Service Example
+
+on:
+  push:
+    branches:
+    - main
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        ports:
+        - 4444:4444 # will assign a random free host port
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        echo "${{toJSON(job.services)}}"
+        wget http://$HOST:$PORT/ui
+      env:
+        HOST: localhost
+        PORT: ${{job.services.selenium.ports[4444]}} # get randomly assigned published port
